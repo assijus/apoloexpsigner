@@ -1,0 +1,1 @@
+select txtword from t_expediente where coddoc=? and codsecao=?
