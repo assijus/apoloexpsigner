@@ -1,5 +1,6 @@
 SELECT e.coddoc, 
        e.codsecao, 
+       e.codsecao || e.coddoc || To_char(e.dtcad, 'ddmmyyyyhh24miss') || e.coddocvinc as secret,
        formata_exp(e.num) AS Num, 
        (SELECT c.descr 
         FROM   tipoexpediente c 

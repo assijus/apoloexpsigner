@@ -1,11 +1,14 @@
 package br.jus.trf2.apoloexp.signer;
 
+import java.io.IOException;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+import java.util.zip.DataFormatException;
 
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetRequest;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetResponse;
@@ -16,16 +19,23 @@ import com.crivano.swaggerservlet.SwaggerUtils;
 public class DocIdPdfGet implements IDocIdPdfGet {
 
 	@Override
-	public void run(DocIdPdfGetRequest req, DocIdPdfGetResponse resp)
-			throws Exception {
+	public void run(DocIdPdfGetRequest req, DocIdPdfGetResponse resp) throws Exception {
 		String status = null;
 		String error = null;
 		final boolean fForcePKCS7 = true;
 
 		Id id = new Id(req.id);
 
-		byte[] pdf = null;
+		// Produce responses
+		resp.doc = getPdf(fForcePKCS7, id);
+		resp.secret = getSecret(id);
+	}
 
+	private static byte[] getPdf(final boolean fForcePKCS7, Id id)
+			throws SQLException, Exception, IOException, DataFormatException {
+		byte[] pdf = null;
+		String status;
+		String error;
 		// Chama a procedure que recupera os dados do PDF
 		//
 		Connection conn = null;
@@ -89,8 +99,7 @@ public class DocIdPdfGet implements IDocIdPdfGet {
 				conn.close();
 		}
 
-		if (pdf == null
-				&& SwaggerUtils.getProperty("apoloexpsigner.pdfservice.url", null) != null) {
+		if (pdf == null && SwaggerUtils.getProperty("apoloexpsigner.pdfservice.url", null) != null) {
 			byte[] docCompressed = null;
 
 			// Get documents from Oracle
@@ -142,8 +151,35 @@ public class DocIdPdfGet implements IDocIdPdfGet {
 		if (pdf == null && exception != null)
 			throw exception;
 
-		// Produce responses
-		resp.doc = pdf;
+		return pdf;
+	}
+
+	public static String getSecret(Id id) throws Exception {
+		// Get documents from Oracle
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		try {
+			conn = Utils.getConnection();
+			pstmt = conn.prepareStatement(Utils.getSQL("secret"));
+			pstmt.setLong(1, id.coddoc);
+			pstmt.setInt(2, id.codsecao);
+			rset = pstmt.executeQuery();
+
+			if (rset.next()) {
+				return rset.getString("secret");
+			} else {
+				throw new Exception("Nenhum DOC encontrado.");
+			}
+		} finally {
+			if (rset != null)
+				rset.close();
+			if (pstmt != null)
+				pstmt.close();
+			if (conn != null)
+				conn.close();
+		}
+
 	}
 
 	@Override

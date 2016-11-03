@@ -1,0 +1,1 @@
+select codsecao || coddoc || To_char(dtcad, 'ddmmyyyyhh24miss') || coddocvinc as secret from t_expediente where coddoc=? and codsecao=?

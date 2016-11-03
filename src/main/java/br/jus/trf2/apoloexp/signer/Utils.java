@@ -30,6 +30,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
+import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 public class Utils {
@@ -117,6 +118,8 @@ public class Utils {
 		uploadFile.setEntity(multipart);
 
 		CloseableHttpResponse response = httpClient.execute(uploadFile);
+		if (response.getStatusLine().getStatusCode() != 200)
+			throw new PresentableException("Não foi possível converter documento do Word em PDF");
 		HttpEntity responseEntity = response.getEntity();
 
 		byte[] pdf = inputStream2ByteArray(responseEntity.getContent());

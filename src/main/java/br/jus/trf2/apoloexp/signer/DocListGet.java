@@ -39,6 +39,7 @@ public class DocListGet implements IDocListGet {
 				Id id = new Id(cpf, rset.getInt("CODSECAO"),
 						rset.getLong("CODDOC"));
 				doc.id = id.toString();
+				doc.secret = rset.getString("secret");
 				doc.code = rset.getString("NUM");
 				doc.descr = rset.getString("DESCR");
 				doc.kind = "Expediente";

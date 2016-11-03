@@ -201,6 +201,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 		resp.sha1 = SwaggerUtils.base64Decode(sha1);
 		resp.sha256 = SwaggerUtils.base64Decode(sha256);
 		resp.extra = extra.toString();
+		resp.secret = DocIdPdfGet.getSecret(id);
 
 		// Force PKCS7
 		if (fForcePKCS7) {
