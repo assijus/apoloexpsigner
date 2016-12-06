@@ -55,4 +55,5 @@ WHERE  e.codsecao = Nval_const('$$SecaoAtual')
                        FROM   documentoarquivo da 
                        WHERE  da.codsecao = e.codsecao 
                               AND da.coddoc = e.coddoc 
-                              AND da.numtipmovarq IS NULL) 
+                              AND da.numtipmovarq IS NULL
+                              AND da.inderaanexo = 'N') 
