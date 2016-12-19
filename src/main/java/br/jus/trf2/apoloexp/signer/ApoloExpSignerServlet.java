@@ -11,21 +11,23 @@ import br.jus.trf2.assijus.system.api.IAssijusSystem;
 
 public class ApoloExpSignerServlet extends SwaggerServlet {
 	private static final long serialVersionUID = -1611417120964698257L;
+	public static String servletContext = null;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		servletContext = config.getServletContext().getContextPath().replace("/", "");
 
 		super.setAPI(IAssijusSystem.class);
 
 		super.setActionPackage("br.jus.trf2.apoloexp.signer");
 
-		super.setAuthorization(SwaggerUtils.getProperty("apoloexpsigner.password", null));
+		super.setAuthorization(Utils.getProperty("password", null));
 
 		addDependency(new TestableDependency("database", "apolods", false) {
 			@Override
 			public String getUrl() {
-				return "java:/jboss/datasources/ApoloDS";
+				return Utils.getProperty("datasource.name", "java:/jboss/datasources/ApoloDS");
 			}
 
 			@Override
@@ -45,7 +47,7 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 
 			@Override
 			public String getUrl() {
-				return SwaggerUtils.getProperty("apoloexpsigner.pdfservice.url", null);
+				return Utils.getProperty("pdfservice.url", null);
 			}
 
 			@Override

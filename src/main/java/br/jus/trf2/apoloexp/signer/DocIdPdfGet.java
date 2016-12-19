@@ -99,7 +99,7 @@ public class DocIdPdfGet implements IDocIdPdfGet {
 				conn.close();
 		}
 
-		if (pdf == null && SwaggerUtils.getProperty("apoloexpsigner.pdfservice.url", null) != null) {
+		if (pdf == null && Utils.getProperty("pdfservice.url", null) != null) {
 			byte[] docCompressed = null;
 
 			// Get documents from Oracle

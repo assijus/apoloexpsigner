@@ -57,7 +57,8 @@ BEGIN
     FROM   documentoarquivo da 
     WHERE  da.codsecao = i_codsecao 
            AND da.coddoc = i_coddoc 
-           AND da.numtipmovarq IS NULL; 
+           AND da.numtipmovarq IS NULL 
+           AND da.inderaanexo = 'N'; 
 
     IF ( v_count > 0 ) THEN 
       o_status := 'Erro'; 

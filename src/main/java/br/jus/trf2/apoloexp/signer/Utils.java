@@ -36,8 +36,7 @@ import com.crivano.swaggerservlet.SwaggerUtils;
 public class Utils {
 	private static final Map<String, byte[]> cache = new HashMap<String, byte[]>();
 
-	public static void fileWrite(String filename, byte[] ba)
-			throws FileNotFoundException, IOException {
+	public static void fileWrite(String filename, byte[] ba) throws FileNotFoundException, IOException {
 		FileOutputStream fos = new FileOutputStream(filename);
 		fos.write(ba);
 		fos.close();
@@ -74,8 +73,7 @@ public class Utils {
 	public static byte[] compress(byte[] data) throws IOException {
 		Deflater deflater = new Deflater();
 		deflater.setInput(data);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-				data.length);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
 		deflater.finish();
 		byte[] buffer = new byte[1024];
 		while (!deflater.finished()) {
@@ -87,12 +85,10 @@ public class Utils {
 		return output;
 	}
 
-	public static byte[] decompress(byte[] data) throws IOException,
-			DataFormatException {
+	public static byte[] decompress(byte[] data) throws IOException, DataFormatException {
 		Inflater inflater = new Inflater();
 		inflater.setInput(data);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
-				data.length);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
 		byte[] buffer = new byte[1024];
 		while (!inflater.finished()) {
 			int count = inflater.inflate(buffer);
@@ -107,12 +103,10 @@ public class Utils {
 
 	public static byte[] convertDocToPdf(byte[] doc) throws Exception {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost uploadFile = new HttpPost(SwaggerUtils.getProperty(
-				"apoloexpsigner.pdfservice.url", null));
+		HttpPost uploadFile = new HttpPost(Utils.getProperty("pdfservice.url", null));
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.addTextBody("field1", "yes", ContentType.TEXT_PLAIN);
-		builder.addBinaryBody("arquivo", doc,
-				ContentType.APPLICATION_OCTET_STREAM, "arquivo.doc");
+		builder.addBinaryBody("arquivo", doc, ContentType.APPLICATION_OCTET_STREAM, "arquivo.doc");
 		HttpEntity multipart = builder.build();
 
 		uploadFile.setEntity(multipart);
@@ -127,8 +121,7 @@ public class Utils {
 		return pdf;
 	}
 
-	private static byte[] inputStream2ByteArray(final InputStream is)
-			throws IOException {
+	private static byte[] inputStream2ByteArray(final InputStream is) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		int nRead;
 		byte[] data = new byte[16384];
@@ -145,8 +138,8 @@ public class Utils {
 		try {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:");
-			DataSource ds = (DataSource) envContext
-					.lookup("java:/jboss/datasources/ApoloDS");
+			String dsName = Utils.getProperty("datasource.name", "java:/jboss/datasources/ApoloDS");
+			DataSource ds = (DataSource) envContext.lookup(dsName);
 			Connection connection = ds.getConnection();
 			if (connection == null)
 				throw new Exception("Can't open connection to Oracle.");
@@ -156,13 +149,10 @@ public class Utils {
 
 			Class.forName("oracle.jdbc.OracleDriver");
 
-			String dbURL = SwaggerUtils.getProperty("apoloexpsigner.datasource.url",
-					null);
-			String username = SwaggerUtils.getProperty(
-					"apoloexpsigner.datasource.username", null);
+			String dbURL = Utils.getProperty("datasource.url", null);
+			String username = Utils.getProperty("datasource.username", null);
 			;
-			String password = SwaggerUtils.getProperty(
-					"apoloexpsigner.datasource.password", null);
+			String password = Utils.getProperty("datasource.password", null);
 			;
 			connection = DriverManager.getConnection(dbURL, username, password);
 			if (connection == null)
@@ -180,8 +170,8 @@ public class Utils {
 	}
 
 	public static String getSQL(String filename) {
-		String text = new Scanner(DocListGet.class.getResourceAsStream(filename
-				+ ".sql"), "UTF-8").useDelimiter("\\A").next();
+		String text = new Scanner(DocListGet.class.getResourceAsStream(filename + ".sql"), "UTF-8").useDelimiter("\\A")
+				.next();
 		return text;
 	}
 
@@ -196,5 +186,9 @@ public class Utils {
 			return ba;
 		}
 		return null;
+	}
+
+	public static String getProperty(String propertyName, String defaultValue) {
+		return SwaggerUtils.getProperty(ApoloExpSignerServlet.servletContext + "." + propertyName, defaultValue);
 	}
 }
