@@ -176,19 +176,6 @@ public class Utils {
 		return text;
 	}
 
-	public static void store(String sha1, byte[] ba) {
-		cache.put(sha1, ba);
-	}
-
-	public static byte[] retrieve(String sha1) {
-		if (cache.containsKey(sha1)) {
-			byte[] ba = cache.get(sha1);
-			cache.remove(sha1);
-			return ba;
-		}
-		return null;
-	}
-
 	public static String getProperty(String propertyName, String defaultValue) {
 		return SwaggerUtils.getProperty(ApoloExpSignerServlet.servletContext + "." + propertyName, defaultValue);
 	}

@@ -35,7 +35,7 @@ public class DocIdSignPut implements IDocIdSignPut {
 
 		// O pdf precisará ser recuperado do cache apenas se ele não estiver
 		// disponível na tabela do compressor automatico
-		byte[] pdfCompressed = Utils.retrieve(sha1);
+		byte[] pdfCompressed = SwaggerUtils.memCacheRemove(sha1);
 		if (pdfCompressed == null && extra.dthrultatu == null)
 			throw new Exception("Não foi possível recuperar o PDF comprimido.");
 

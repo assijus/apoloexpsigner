@@ -186,7 +186,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 						"Não foi possível contar o número de páginas do PDF, provavelmente o documento está corrompido.");
 			extra.pagecount = pagecount;
 
-			Utils.store(sha1, pdfCompressed);
+			SwaggerUtils.memCacheStore(sha1, pdfCompressed);
 		}
 
 		if (sha256 == null) {
