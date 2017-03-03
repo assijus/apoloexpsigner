@@ -31,7 +31,6 @@ public class DocListGet implements IDocListGet {
 			pstmt = conn.prepareStatement(Utils.getSQL("list"));
 			pstmt.setString(1, cpf);
 			pstmt.setString(2, cpf);
-			pstmt.setString(3, cpf);
 			rset = pstmt.executeQuery();
 
 			while (rset.next()) {
