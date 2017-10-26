@@ -18,7 +18,7 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 		super.init(config);
 
 		SwaggerUtils.setCache(new MemCacheRedis());
-		
+
 		servletContext = config.getServletContext().getContextPath().replace("/", "");
 
 		super.setAPI(IAssijusSystem.class);
@@ -26,8 +26,8 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 		super.setActionPackage("br.jus.trf2.apoloexp.signer");
 
 		super.setAuthorization(Utils.getProperty("password", null));
-		
-		addDependency(new TestableDependency("database", "apolods", false) {
+
+		addDependency(new TestableDependency("database", "apolods", false, 0, 10000) {
 			@Override
 			public String getUrl() {
 				return Utils.getProperty("datasource.name", "java:/jboss/datasources/ApoloDS");
@@ -46,7 +46,7 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 			}
 		});
 
-		addDependency(new TestableDependency("webservice", "conversor", false) {
+		addDependency(new TestableDependency("webservice", "conversor", false, 0, 10000) {
 
 			@Override
 			public String getUrl() {

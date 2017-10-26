@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -34,8 +32,6 @@ import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 public class Utils {
-	private static final Map<String, byte[]> cache = new HashMap<String, byte[]>();
-
 	public static void fileWrite(String filename, byte[] ba) throws FileNotFoundException, IOException {
 		FileOutputStream fos = new FileOutputStream(filename);
 		fos.write(ba);
