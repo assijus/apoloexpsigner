@@ -1,5 +1,7 @@
 package br.jus.trf2.apoloexp.signer;
 
+import java.util.UUID;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
@@ -66,6 +68,25 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 				return pdf != null;
 			}
 
+		});
+
+		addDependency(new TestableDependency("cache", "redis", false, 0, 10000) {
+
+			@Override
+			public String getUrl() {
+				return "redis://" + MemCacheRedis.getMasterHost() + ":" + MemCacheRedis.getMasterPort() + "/"
+						+ MemCacheRedis.getDatabase() + " (" + "redis://" + MemCacheRedis.getSlaveHost() + ":"
+						+ MemCacheRedis.getSlavePort() + "/" + MemCacheRedis.getDatabase() + ")";
+			}
+
+			@Override
+			public boolean test() throws Exception {
+				String uuid = UUID.randomUUID().toString();
+				MemCacheRedis mc = new MemCacheRedis();
+				mc.store("test", uuid.getBytes());
+				String uuid2 = new String(mc.retrieve("test"));
+				return uuid.equals(uuid2);
+			}
 		});
 
 	}
