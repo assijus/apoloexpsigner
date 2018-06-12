@@ -1,5 +1,6 @@
 package br.jus.trf2.apoloexp.signer;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -14,6 +15,7 @@ import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetRequest;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetResponse;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.IDocIdPdfGet;
 
+import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 public class DocIdPdfGet implements IDocIdPdfGet {
@@ -27,8 +29,8 @@ public class DocIdPdfGet implements IDocIdPdfGet {
 		Id id = new Id(req.id);
 
 		// Produce responses
-		resp.doc = getPdf(fForcePKCS7, id);
-		resp.secret = getSecret(id);
+		resp.inputstream = new ByteArrayInputStream(getPdf(fForcePKCS7, id));
+		SwaggerServlet.getHttpServletResponse().addHeader("Doc-Secret", getSecret(id));
 	}
 
 	private static byte[] getPdf(final boolean fForcePKCS7, Id id)
