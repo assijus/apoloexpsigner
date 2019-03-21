@@ -18,23 +18,35 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 	public static String servletContext = null;
 
 	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+	public void initialize(ServletConfig config) throws ServletException {
+		setAPI(IAssijusSystem.class);
+		setActionPackage("br.jus.trf2.apoloexp.signer");
 
+		// Redis
+		//
+		addRestrictedProperty("redis.database", "10");
+		addPrivateProperty("redis.password", null);
+		addRestrictedProperty("redis.slave.port", "0");
+		addRestrictedProperty("redis.slave.host", null);
+		addRestrictedProperty("redis.master.host", "localhost");
+		addRestrictedProperty("redis.master.port", "6379");
 		SwaggerUtils.setCache(new MemCacheRedis());
 
-		servletContext = config.getServletContext().getContextPath().replace("/", "");
+		addRestrictedProperty("pdfservice.url", null);
 
-		super.setAPI(IAssijusSystem.class);
+		addRestrictedProperty("datasource.name", "java:/jboss/datasources/ApoloDS");
+		addRestrictedProperty("datasource.url", null);
+		addRestrictedProperty("datasource.username", null);
+		addPrivateProperty("datasource.password", null);
+		addRestrictedProperty("datasource.schema", "testeapolotrf");
 
-		super.setActionPackage("br.jus.trf2.apoloexp.signer");
-
-		super.setAuthorization(Utils.getProperty("password", null));
+		addPrivateProperty("password", null);
+		super.setAuthorization(getProperty("password"));
 
 		addDependency(new TestableDependency("database", "apolods", false, 0, 10000) {
 			@Override
 			public String getUrl() {
-				return Utils.getProperty("datasource.name", "java:/jboss/datasources/ApoloDS");
+				return getProperty("datasource.name");
 			}
 
 			@Override
@@ -54,7 +66,7 @@ public class ApoloExpSignerServlet extends SwaggerServlet {
 
 			@Override
 			public String getUrl() {
-				return Utils.getProperty("pdfservice.url", null);
+				return getProperty("pdfservice.url");
 			}
 
 			@Override

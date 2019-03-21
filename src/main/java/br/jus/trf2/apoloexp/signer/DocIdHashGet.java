@@ -12,16 +12,16 @@ import java.sql.Types;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import com.crivano.swaggerservlet.SwaggerServlet;
+import com.crivano.swaggerservlet.SwaggerUtils;
+
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdHashGetRequest;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdHashGetResponse;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.IDocIdHashGet;
 
-import com.crivano.swaggerservlet.SwaggerUtils;
-
 public class DocIdHashGet implements IDocIdHashGet {
 	@Override
-	public void run(DocIdHashGetRequest req, DocIdHashGetResponse resp)
-			throws Exception {
+	public void run(DocIdHashGetRequest req, DocIdHashGetResponse resp) throws Exception {
 		final boolean fForcePKCS7 = false;
 
 		Id id = new Id(req.id);
@@ -115,8 +115,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 				conn.close();
 		}
 
-		if (sha256 == null
-				&& Utils.getProperty("pdfservice.url", null) != null) {
+		if (sha256 == null && SwaggerServlet.getProperty("pdfservice.url") != null) {
 			byte[] docCompressed = null;
 
 			// Get documents from Oracle
@@ -210,8 +209,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 		}
 	}
 
-	public static byte[] calcSha1(byte[] content)
-			throws NoSuchAlgorithmException {
+	public static byte[] calcSha1(byte[] content) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.reset();
 		md.update(content);
@@ -219,8 +217,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 		return output;
 	}
 
-	public static byte[] calcSha256(byte[] content)
-			throws NoSuchAlgorithmException {
+	public static byte[] calcSha256(byte[] content) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		md.reset();
 		md.update(content);

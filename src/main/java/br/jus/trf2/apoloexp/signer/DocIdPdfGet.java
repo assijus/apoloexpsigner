@@ -11,12 +11,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.zip.DataFormatException;
 
+import com.crivano.swaggerservlet.SwaggerServlet;
+
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetRequest;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.DocIdPdfGetResponse;
 import br.jus.trf2.assijus.system.api.IAssijusSystem.IDocIdPdfGet;
-
-import com.crivano.swaggerservlet.SwaggerServlet;
-import com.crivano.swaggerservlet.SwaggerUtils;
 
 public class DocIdPdfGet implements IDocIdPdfGet {
 
@@ -101,7 +100,7 @@ public class DocIdPdfGet implements IDocIdPdfGet {
 				conn.close();
 		}
 
-		if (pdf == null && Utils.getProperty("pdfservice.url", null) != null) {
+		if (pdf == null && SwaggerServlet.getProperty("pdfservice.url") != null) {
 			byte[] docCompressed = null;
 
 			// Get documents from Oracle
