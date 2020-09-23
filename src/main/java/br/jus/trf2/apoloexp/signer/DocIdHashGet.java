@@ -115,7 +115,7 @@ public class DocIdHashGet implements IDocIdHashGet {
 				conn.close();
 		}
 
-		if (sha256 == null && SwaggerServlet.getProperty("pdfservice.url") != null) {
+		if (sha256 == null && ApoloExpSignerServlet.getProp("pdfservice.url") != null) {
 			byte[] docCompressed = null;
 
 			// Get documents from Oracle

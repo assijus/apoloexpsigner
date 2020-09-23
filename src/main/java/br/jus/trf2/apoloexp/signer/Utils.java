@@ -99,7 +99,7 @@ public class Utils {
 
 	public static byte[] convertDocToPdf(byte[] doc) throws Exception {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpPost uploadFile = new HttpPost(SwaggerServlet.getProperty("pdfservice.url"));
+		HttpPost uploadFile = new HttpPost(ApoloExpSignerServlet.getProp("pdfservice.url"));
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.addTextBody("field1", "yes", ContentType.TEXT_PLAIN);
 		builder.addBinaryBody("arquivo", doc, ContentType.APPLICATION_OCTET_STREAM, "arquivo.doc");
@@ -134,7 +134,7 @@ public class Utils {
 		try {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:");
-			String dsName = SwaggerServlet.getProperty("datasource.name");
+			String dsName = ApoloExpSignerServlet.getProp("datasource.name");
 			DataSource ds = (DataSource) envContext.lookup(dsName);
 			Connection connection = ds.getConnection();
 			if (connection == null)
@@ -145,10 +145,10 @@ public class Utils {
 
 			Class.forName("oracle.jdbc.OracleDriver");
 
-			String dbURL = SwaggerServlet.getProperty("datasource.url");
-			String username = SwaggerServlet.getProperty("datasource.username");
+			String dbURL = ApoloExpSignerServlet.getProp("datasource.url");
+			String username = ApoloExpSignerServlet.getProp("datasource.username");
 			;
-			String password = SwaggerServlet.getProperty("datasource.password");
+			String password = ApoloExpSignerServlet.getProp("datasource.password");
 			;
 			connection = DriverManager.getConnection(dbURL, username, password);
 			if (connection == null)
@@ -156,7 +156,7 @@ public class Utils {
 			PreparedStatement pstmt = null;
 			try {
 				pstmt = connection.prepareStatement(
-						"alter session set current_schema=" + SwaggerServlet.getProperty("datasource.schema"));
+						"alter session set current_schema=" + ApoloExpSignerServlet.getProp("datasource.schema"));
 				pstmt.execute();
 			} finally {
 				if (pstmt != null)
